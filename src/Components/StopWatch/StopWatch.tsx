@@ -4,8 +4,8 @@ import ControlButtons from "../ControlButton";
 import Timer from "../Timer";
   
 function StopWatch() {
-  const [isActived, setIsActived] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
+  const [isActived, setIsActived] = useState(false); // For Check Press Reset Button
+  const [isPaused, setIsPaused] = useState(true); // For Check Pause
   const [time, setTime] = useState<number>(0);
   let interval = useRef<number | null>(null);
   
@@ -19,12 +19,14 @@ function StopWatch() {
         setTime((time) => time + 10);
       }, 10);
     } else {
+
       if(interval.current)
       {
         window.clearInterval(interval.current);
         setTime(0);
         interval.current = null;
       }
+
     }
     return () => {
       if(interval.current) {
