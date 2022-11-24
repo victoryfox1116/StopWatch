@@ -10,6 +10,9 @@ function StopWatch() {
   let interval = useRef<number | null>(null);
   
   useEffect(() => {
+
+
+    
   
     if (isActived && isPaused === false) {
       interval.current = window.setInterval(() => {
