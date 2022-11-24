@@ -1,30 +1,38 @@
 
-import React, { useState, useEffect } from "react";
-import Timer from "../Timer/Timer";
-import ControlButton from "../ControlButton/ControlButton";
+import React, { useState, useEffect, useRef } from "react";
+import ControlButtons from "../ControlButton";
+import Timer from "../Timer";
   
 function StopWatch() {
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const [isPaused, setIsPaused] = useState<boolean>(true);
+  const [isActived, setIsActived] = useState(false);
+  const [isPaused, setIsPaused] = useState(true);
   const [time, setTime] = useState<number>(0);
+  let interval = useRef<number | null>(null);
   
   useEffect(() => {
-    let interval:any = null;
   
-    if (isActive && isPaused === false) {
-      interval = setInterval(() => {
+    if (isActived && isPaused === false) {
+      interval.current = window.setInterval(() => {
         setTime((time) => time + 10);
       }, 10);
     } else {
-      clearInterval(interval);
+      if(interval.current)
+      {
+        window.clearInterval(interval.current);
+        setTime(0);
+        interval.current = null;
+      }
     }
     return () => {
-      clearInterval(interval);
+      if(interval.current) {
+        window.clearInterval(interval.current);
+        interval.current = null;
+      }
     };
-  }, [isActive, isPaused]);
+  }, [isActived, isPaused]);
   
   const handleStart = () => {
-    setIsActive(true);
+    setIsActived(true);
     setIsPaused(false);
   };
   
@@ -33,19 +41,19 @@ function StopWatch() {
   };
   
   const handleReset = () => {
-    setIsActive(false);
+    setIsActived(false);
     setTime(0);
   };
   
   return (
     <div>
       <Timer time={time} />
-      <ControlButton
-        active={isActive}
+      <ControlButtons
+        isActived={isActived}
         isPaused={isPaused}
-        handleStart={handleStart}
-        handlePauseResume={handlePauseResume}
-        handleReset={handleReset}
+        onHandleStart={handleStart}
+        onHandlePauseResume={handlePauseResume}
+        onHandleReset={handleReset}
       />
     </div>
   );
